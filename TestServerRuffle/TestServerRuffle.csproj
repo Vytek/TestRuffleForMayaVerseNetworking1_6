@@ -46,6 +46,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NetStack\NetStack.Buffers\ArrayPool.cs" />
+    <Compile Include="NetStack\NetStack.Buffers\ArrayPoolEventSource.cs" />
+    <Compile Include="NetStack\NetStack.Buffers\DefaultArrayPool.cs" />
+    <Compile Include="NetStack\NetStack.Buffers\DefaultArrayPoolBucket.cs" />
+    <Compile Include="NetStack\NetStack.Buffers\Utilities.cs" />
+    <Compile Include="NetStack\NetStack.Compression\BoundedRange.cs" />
+    <Compile Include="NetStack\NetStack.Compression\HalfPrecision.cs" />
+    <Compile Include="NetStack\NetStack.Compression\SmallestThree.cs" />
+    <Compile Include="NetStack\NetStack.Serialization\BitBuffer.cs" />
+    <Compile Include="NetStack\NetStack.Threading\ArrayQueue.cs" />
+    <Compile Include="NetStack\NetStack.Threading\ConcurrentBuffer.cs" />
+    <Compile Include="NetStack\NetStack.Threading\ConcurrentPool.cs" />
+    <Compile Include="NetStack\NetStack.Unsafe\Memory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -53,8 +66,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NetStack\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
