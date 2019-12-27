@@ -1,11 +1,14 @@
 ﻿//System
 using System;
+using System.Net;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Concurrent;
 using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
 using System.IO;
+using System.Threading;
+using System.Reflection;
+using System.Diagnostics;
 
 //Ruffles
 using Ruffles.Configuration;
@@ -39,13 +42,54 @@ namespace TestServerRuffle
             UseSimulator = false
         };
 
+        static RuffleSocket server = new RuffleSocket(ServerConfig);
+
+        static ManualResetEvent _quitEvent = new ManualResetEvent(false);
+
+        // The client stores the servers id here
+        ulong serverId = 0;
+        Connection serverConnection = null;
+
+        // The time when the connection started
+        DateTime started = DateTime.Now;
+
+        // The time when the last message was sent
+        DateTime lastSent = DateTime.MinValue;
+
+        // The time the last status was printed
+        DateTime lastStatusPrint = DateTime.MinValue;
+
+        // The amount of message that has been received
+        int messagesReceived = 0;
+
+        // The amount of messages that has been sent
+        int messageCounter = 0;
+
         /// <summary>
         /// Main Thread
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            server.OnNetworkEvent += Server_OnNetworkEvent;     
+            server.Start();
 
+            //https://stackoverflow.com/questions/2586612/how-to-keep-a-net-console-app-running
+            Console.CancelKeyPress += (sender, eArgs) =>
+            {
+                _quitEvent.Set();
+                eArgs.Cancel = true;
+            };
+
+        }
+
+        /// <summary>
+        /// Received event from clients
+        /// </summary>
+        /// <param name="obj"></param>
+        private static void Server_OnNetworkEvent(NetworkEvent obj)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
