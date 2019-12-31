@@ -75,6 +75,9 @@ namespace TestServerRuffle
                 eArgs.Cancel = true;
             };
 
+            _quitEvent.WaitOne();
+
+            // cleanup/shutdown and quit
             server.Stop();
             Environment.Exit(0);
         }
