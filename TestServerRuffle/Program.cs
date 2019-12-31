@@ -1,19 +1,13 @@
 ﻿//System
 using System;
-using System.Net;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Text;
 using System.IO;
 using System.Threading;
 using System.Reflection;
-using System.Diagnostics;
 
 //Ruffles
 using Ruffles.Configuration;
 using Ruffles.Channeling;
-using Ruffles.Simulation;
 using Ruffles.Connections;
 using Ruffles.Core;
 
@@ -46,9 +40,9 @@ namespace TestServerRuffle
 
         static ManualResetEvent _quitEvent = new ManualResetEvent(false);
 
-        // The client stores the servers id here
-        ulong serverId = 0;
-        Connection serverConnection = null;
+        // The server stores the clients id here
+        static ulong clientId = 0;
+        static Connection clientConnection = null;
 
         // The time when the connection started
         DateTime started = DateTime.Now;
@@ -60,10 +54,10 @@ namespace TestServerRuffle
         DateTime lastStatusPrint = DateTime.MinValue;
 
         // The amount of message that has been received
-        int messagesReceived = 0;
+        static int messagesReceived = 0;
 
         // The amount of messages that has been sent
-        int messageCounter = 0;
+        static int messageCounter = 0;
 
         /// <summary>
         /// Main Thread
@@ -71,7 +65,7 @@ namespace TestServerRuffle
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            server.OnNetworkEvent += Server_OnNetworkEvent;     
+            server.OnNetworkEvent += Server_OnNetworkEvent;
             server.Start();
 
             //https://stackoverflow.com/questions/2586612/how-to-keep-a-net-console-app-running
@@ -81,6 +75,8 @@ namespace TestServerRuffle
                 eArgs.Cancel = true;
             };
 
+            server.Stop();
+            Environment.Exit(0);
         }
 
         /// <summary>
@@ -89,7 +85,29 @@ namespace TestServerRuffle
         /// <param name="obj"></param>
         private static void Server_OnNetworkEvent(NetworkEvent obj)
         {
-            throw new NotImplementedException();
+            if (obj.Type != NetworkEventType.Nothing)
+            {
+                if (obj.Type != NetworkEventType.Data)
+                {
+                    Console.WriteLine("ServerEvent: " + obj.Type);
+                }
+
+                if (obj.Type == NetworkEventType.Connect)
+                {
+                    clientId = obj.Connection.Id;
+                    clientConnection = obj.Connection;
+                    Console.WriteLine("ID Client: " + obj.Connection.Id + "; Connection: " + obj.Connection);
+                }
+
+                if (obj.Type == NetworkEventType.Data)
+                {
+                    messagesReceived++;
+                    Console.WriteLine("Got message: \"" + Encoding.ASCII.GetString(obj.Data.Array, obj.Data.Offset, obj.Data.Count) + "\"");
+                    PrintByteArray(obj.Data.Array);
+                }
+            }
+
+            obj.Recycle();
         }
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace TestClientRuffle
         DateTime started = DateTime.Now;
 
         // The time when the last message was sent
-        DateTime lastSent = DateTime.MinValue;
+        static DateTime lastSent = DateTime.MinValue;
 
         // The time the last status was printed
         DateTime lastStatusPrint = DateTime.MinValue;
@@ -58,8 +58,8 @@ namespace TestClientRuffle
             try
             {
                 //Star connection
-                client.Start();
                 client.OnNetworkEvent += Client_OnNetworkEvent;
+                client.Start();
                 Console.WriteLine("Connecting...");
                 {
                     // IPv4 Connect
@@ -80,6 +80,16 @@ namespace TestClientRuffle
                     if ((cki.Modifiers & ConsoleModifiers.Alt) != 0) Console.Write("ALT+");
                     if ((cki.Modifiers & ConsoleModifiers.Shift) != 0) Console.Write("SHIFT+");
                     if ((cki.Modifiers & ConsoleModifiers.Control) != 0) Console.Write("CTL+");
+                    if (cki.Key.ToString().ToLower() == "s")
+                    {
+                        //Send test message
+                        byte[] helloReliable = Encoding.ASCII.GetBytes("This message was sent over a reliable channel" + messageCounter);
+                        client.SendNow(new ArraySegment<byte>(helloReliable, 0, helloReliable.Length), serverId, 1, false);
+                        Console.WriteLine("Sending packet: " + messageCounter);
+
+                        messageCounter++;
+                        lastSent = DateTime.Now;
+                    }
                     Console.WriteLine(cki.Key.ToString());
                 } while (cki.Key != ConsoleKey.Escape);
 
