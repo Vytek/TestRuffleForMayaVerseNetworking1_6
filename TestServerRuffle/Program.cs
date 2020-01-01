@@ -13,8 +13,10 @@ using Ruffles.Core;
 
 namespace TestServerRuffle
 {
+
     class Program
     {
+
         internal static readonly SocketConfig ServerConfig = new SocketConfig()
         {
             ChallengeDifficulty = 20, // Difficulty 20 is fairly hard
@@ -111,6 +113,14 @@ namespace TestServerRuffle
             }
 
             obj.Recycle();
+        }
+
+        //https://stackoverflow.com/a/406576
+        public static byte[] SliceMe(byte[] source, int length)
+        {
+            byte[] destfoo = new byte[length];
+            Array.Copy(source, 0, destfoo, 0, length);
+            return destfoo;
         }
 
         /// <summary>
