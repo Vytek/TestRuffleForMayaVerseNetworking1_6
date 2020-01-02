@@ -4,12 +4,16 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Reflection;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 
 //Ruffles
 using Ruffles.Configuration;
 using Ruffles.Channeling;
 using Ruffles.Connections;
 using Ruffles.Core;
+using System.Collections.Generic;
+
 
 namespace TestServerRuffle
 {
@@ -37,6 +41,21 @@ namespace TestServerRuffle
             },
             UseSimulator = false
         };
+
+        /// <summary>
+        /// Client message received.
+        /// </summary>
+		public struct ClientMessageReceived
+        {
+            public byte[] MessageBytes;
+            public Connection ClientConnected;
+            public ulong clientIdConnected;
+        };
+
+        //https://stackoverflow.com/questions/8629285/how-to-create-a-collection-like-liststring-object
+        static List<KeyValuePair<ulong, Connection>> clients = new List<KeyValuePair<ulong, Connection>>();
+        //Queue Messages
+        static ConcurrentQueue<ClientMessageReceived> QueueMessages = new ConcurrentQueue<ClientMessageReceived>();
 
         static RuffleSocket server = new RuffleSocket(ServerConfig);
 
@@ -67,6 +86,14 @@ namespace TestServerRuffle
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+
+            //Some Server Information
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+            Console.WriteLine("Server Version: " + version);
+
+            //Start Ruffles
             server.OnNetworkEvent += Server_OnNetworkEvent;
             server.Start();
 
@@ -115,11 +142,13 @@ namespace TestServerRuffle
                 if (obj.Type == NetworkEventType.Disconnect)
                 {
                     //Disconnected Client
+                    Console.WriteLine("ServerEvent enter: " + obj.Type);
                 }
 
                 if (obj.Type == NetworkEventType.Timeout)
                 {
                     //Timeouted Client
+                    Console.WriteLine("ServerEvent enter: " + obj.Type);
                 }
 
                 obj.Recycle();
