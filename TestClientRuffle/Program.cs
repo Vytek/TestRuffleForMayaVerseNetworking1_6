@@ -68,7 +68,7 @@ namespace TestClientRuffle
 
                 //Start Thread
                 ConsoleKeyInfo cki;
-                // Prevent example from ending if CTL+C is pressed.
+                //Prevent example from ending if CTL+C is pressed.
                 Console.TreatControlCAsInput = true;
 
                 Console.WriteLine("Press any combination of CTL, ALT, and SHIFT, and a console key.");
@@ -80,10 +80,11 @@ namespace TestClientRuffle
                     if ((cki.Modifiers & ConsoleModifiers.Alt) != 0) Console.Write("ALT+");
                     if ((cki.Modifiers & ConsoleModifiers.Shift) != 0) Console.Write("SHIFT+");
                     if ((cki.Modifiers & ConsoleModifiers.Control) != 0) Console.Write("CTL+");
+                    //Send test message
                     if (cki.Key.ToString().ToLower() == "s")
                     {
                         //Send test message
-                        byte[] helloReliable = Encoding.ASCII.GetBytes("This message was sent over a reliable channel" + messageCounter);
+                        byte[] helloReliable = Encoding.ASCII.GetBytes("This message was sent over a reliable channel " + messageCounter);
                         client.SendNow(new ArraySegment<byte>(helloReliable, 0, helloReliable.Length), serverId, 1, false);
                         Console.WriteLine("Sending packet: " + messageCounter);
 

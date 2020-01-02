@@ -108,14 +108,32 @@ namespace TestServerRuffle
                 {
                     messagesReceived++;
                     Console.WriteLine("Got message: \"" + Encoding.ASCII.GetString(obj.Data.Array, obj.Data.Offset, obj.Data.Count) + "\"");
-                    PrintByteArray(obj.Data.Array);
+                    Console.WriteLine("Offset: " + obj.Data.Offset + ", Count: " + obj.Data.Count);
+                    PrintByteArray(SliceMe(obj.Data.Array, obj.Data.Count));
                 }
+
+                if (obj.Type == NetworkEventType.Disconnect)
+                {
+                    //Disconnected Client
+                }
+
+                if (obj.Type == NetworkEventType.Timeout)
+                {
+                    //Timeouted Client
+                }
+
+                obj.Recycle();
             }
 
-            obj.Recycle();
         }
 
         //https://stackoverflow.com/a/406576
+        /// <summary>
+        /// Slice array
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public static byte[] SliceMe(byte[] source, int length)
         {
             byte[] destfoo = new byte[length];
