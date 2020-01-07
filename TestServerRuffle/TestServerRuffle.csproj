@@ -46,6 +46,15 @@
     <Reference Include="Ruffles">
       <HintPath>..\packages\Ruffles.7.1.2\lib\net45\Ruffles.dll</HintPath>
     </Reference>
+    <Reference Include="INIFileParser">
+      <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteDB">
+      <HintPath>..\packages\LiteDB.4.1.4\lib\net40\LiteDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Scrypt">
+      <HintPath>..\packages\Scrypt.NET.1.3.0\lib\net20\Scrypt.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NetStack\NetStack.Buffers\ArrayPool.cs" />

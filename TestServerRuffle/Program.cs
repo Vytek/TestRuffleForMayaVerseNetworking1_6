@@ -129,6 +129,9 @@ namespace TestServerRuffle
                     clientId = obj.Connection.Id;
                     clientConnection = obj.Connection;
                     Console.WriteLine("ID Client: " + obj.Connection.Id + "; Connection: " + obj.Connection);
+                    //Add client to list
+                    //https://www.dotnetperls.com/keyvaluepair
+                    clients.Add(new KeyValuePair<ulong, Connection>(obj.Connection.Id, obj.Connection));
                 }
 
                 if (obj.Type == NetworkEventType.Data)
@@ -143,12 +146,16 @@ namespace TestServerRuffle
                 {
                     //Disconnected Client
                     Console.WriteLine("ServerEvent enter: " + obj.Type);
+                    //Remove client from list
+                    clients.RemoveAll(item => item.Value.Equals(obj.Connection));
                 }
 
                 if (obj.Type == NetworkEventType.Timeout)
                 {
                     //Timeouted Client
                     Console.WriteLine("ServerEvent enter: " + obj.Type);
+                    //Remove client from list
+                    clients.RemoveAll(item => item.Value.Equals(obj.Connection));
                 }
 
                 obj.Recycle();
@@ -166,6 +173,7 @@ namespace TestServerRuffle
         public static byte[] SliceMe(byte[] source, int length)
         {
             byte[] destfoo = new byte[length];
+            //Array
             Array.Copy(source, 0, destfoo, 0, length);
             return destfoo;
         }
